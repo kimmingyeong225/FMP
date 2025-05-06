@@ -32,9 +32,13 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc' // 추가
+	runtimeOnly 'mysql:mysql-connector-java'  // 추가
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()
