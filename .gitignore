@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+.metadata/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -37,4 +38,3 @@ out/
 .vscode/
 src/main/resources/application-secret.yml
 src/main/resources/application.yml
-.metadata/
