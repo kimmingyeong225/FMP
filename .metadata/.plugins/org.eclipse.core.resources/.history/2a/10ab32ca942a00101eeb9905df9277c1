@@ -1,3 +1,0 @@
-spring.application.name=demo
-#MySQL
-spring.profiles.include=secret
