@@ -1,0 +1,8 @@
+package templates;
+
+public class Snippet {
+	public static void main(String[] args) {
+		templates.views
+	}
+}
+
