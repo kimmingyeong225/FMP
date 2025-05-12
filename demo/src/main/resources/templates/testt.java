@@ -1,6 +1,6 @@
 package templates;
 
 public class testt {
-	//dddfdfdfdfdfdf
+	//test2
 
 }
