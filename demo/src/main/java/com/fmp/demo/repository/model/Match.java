@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Matches {
+public class Match {
 
 	private Long matchId; 
 	private String user1Id; // 사용자1 ID

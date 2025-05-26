@@ -1,10 +1,9 @@
-package com.fmp.demo.repository.model;
+package com.fmp.demo.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
-import jakarta.persistence.PrePersist;
+import com.fmp.demo.repository.model.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class Users {
+public class UserDTO {
 	
 	private String studentId;
 	private String department;
@@ -28,20 +27,20 @@ public class Users {
 	private String userId;
 	private String password;
 	private LocalDateTime joinDate;
-	private boolean deleted;
-	private boolean verified;
+
 	
-	@Lob
-	@Column(name = "profile_image")
-	// 프로필 이미지 
-	private byte[] profileImage;
-	
-    @PrePersist
-    public void prePersist() {
-        this.joinDate = LocalDateTime.now();
-        this.deleted = false;
-        this.verified = false;
-    }
-	
+	public UserDTO(User user) {
+		this.studentId = user.getStudentId();
+		this.department = user.getDepartment();
+		this.schoolYear = user.getSchoolYear();
+		this.major = user.getMajor();
+		this.gender = user.getGender();
+		this.name = user.getName();
+		this.phone = user.getPhone();
+		this.userId = user.getUserId();
+		this.password = user.getPassword();
+		this.joinDate = user.getJoinDate();
+		
+	}
 
 }
