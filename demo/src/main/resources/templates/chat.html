@@ -2,281 +2,337 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>FMP Chat - 채팅</title>
+  <title>FMP Chat - 1:1 채팅</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Bootstrap 5 CDN -->
+  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Optional: FontAwesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
   <style>
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Pretendard:wght@400;600;800&display=swap');
+    html, body {
+      height: 100%;
       min-height: 100vh;
-    }
-    .chat-container {
-      max-width: 900px;
-      min-height: 600px;
-      margin: 40px auto;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
-      background: #fff;
-      display: flex;
-      height: 80vh;
-    }
-    .sidebar {
-      width: 320px;
-      background: #f5f6fa;
-      border-right: 1px solid #e6e6e6;
-      overflow-y: auto;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .sidebar-header {
-      padding: 24px 20px 12px 20px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      color: #764ba2;
-      border-bottom: 1px solid #e6e6e6;
-      background: #fff;
-    }
-    .chat-list {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      padding: 0;
       margin: 0;
-      list-style: none;
+      padding: 0;
+      background: linear-gradient(132deg, #e6e7ff 0%, #ece1ff 30%, #ffe3ee 100%);
     }
-    .chat-list li {
-      padding: 18px 20px 18px 20px;
-      border-bottom: 1px solid #e6e6e6;
-      cursor: pointer;
+    body {
+      font-family: 'Pretendard', 'Montserrat', Arial, sans-serif;
       display: flex;
       align-items: center;
-      transition: background 0.2s;
-      background: none;
-    }
-    .chat-list li.active, .chat-list li:hover {
-      background: #e9e6f5;
-    }
-    .chat-list img {
-      width: 46px; height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 12px;
-      border: 2px solid #764ba2;
-    }
-    .chat-list .user-info {
-      flex: 1;
-    }
-    .chat-list .user-name {
-      font-weight: 500;
-      font-size: 1.08rem;
-      margin-bottom: 3px;
-    }
-    .chat-list .last-message {
-      font-size: 0.97rem;
-      color: #666;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 140px;
-    }
-    .chat-list .message-time {
-      font-size: 0.80rem;
-      color: #aaa;
-      margin-left: auto;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
     }
 
-    .chat-main {
-      flex: 1 1 0;
-      display: flex;
-      flex-direction: column;
-      background: #f7f5ff;
-    }
-    .chat-main-header {
-      padding: 18px 26px;
-      background: #fff;
-      border-bottom: 1px solid #e6e6e6;
+    /* 마이페이지 버튼 */
+    .mypage-btn {
+      position: fixed;
+      top: 2.1rem;
+      right: 2.3rem;
+      z-index: 99;
+      background: rgba(255,255,255,0.96);
+      border-radius: 2.3rem;
+      box-shadow: 0 3px 24px 0 #eed4f529;
+      padding: 0.65rem 1.3rem 0.65rem 1.3rem;
+      font-family: 'Pretendard', 'Montserrat', Arial, sans-serif;
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #b56edc;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 0.56rem;
+      text-decoration: none;
+      transition: box-shadow 0.17s, transform 0.14s, background 0.17s, color .13s;
+      border: 1.7px solid #ece5fa;
+      backdrop-filter: blur(4px);
+      animation: fadeInDown 1.2s cubic-bezier(.17,.67,.83,.67);
     }
-    .chat-main-header img {
-      width: 44px; height: 44px;
+    .mypage-btn:hover {
+      background: linear-gradient(90deg, #fbefff 0%, #ffe3e6 100%);
+      color: #ff95c6;
+      transform: translateY(-2px) scale(1.04);
+      box-shadow: 0 7px 24px 0 #efd1fb59;
+    }
+    @keyframes fadeInDown {
+      0% { opacity:0; transform:translateY(-32px);}
+      100% { opacity:1; transform:none;}
+    }
+    /* 채팅 메인 영역 */
+    .chat-container {
+      width: 100%;
+      max-width: 1100px;
+      min-width: 340px;
+      min-height: 650px;
+      margin: 60px auto 30px auto;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 12px 48px 0 rgba(136,104,181,0.19);
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 86vh;
+      z-index: 2;
+      transition: box-shadow 0.18s;
+      position: relative;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 46px 18px 46px;
+      background: #f7f2ff;
+      border-bottom: 1.6px solid #e7e0fa;
+      min-height: 80px;
+      position: relative;
+    }
+    .chat-profile {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .chat-profile img {
+      width: 58px; height: 58px;
       border-radius: 50%;
-      border: 2px solid #764ba2;
+      border: 2.6px solid #764ba2;
+      object-fit: cover;
+      background: #fff;
     }
-    .chat-main-header .user-name {
-      font-weight: 500;
-      font-size: 1.15rem;
+    .chat-profile .user-name {
+      font-size: 1.34rem;
+      font-weight: 700;
+      color: #764ba2;
+      letter-spacing: 0.02em;
+      display: flex; align-items: center;
     }
-    .chat-main-header .status-dot {
+    .chat-profile .status-dot {
       width: 11px; height: 11px;
       background: #00d386;
       border-radius: 50%;
+      margin-left: 10px;
       display: inline-block;
-      margin-left: 6px;
+      box-shadow: 0 0 5px #76ecb3;
     }
-
+    .end-chat-btn {
+      font-size: 1.04rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(90deg, #b56edc 0%, #ffb6b9 100%);
+      border: none;
+      border-radius: 20px;
+      padding: 11px 30px 11px 22px;
+      transition: background 0.13s, color 0.12s, box-shadow .15s;
+      margin-left: 18px;
+      box-shadow: 0 2px 10px 0 #e4c2ff30;
+      outline: none;
+      letter-spacing: 0.07em;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .end-chat-btn:hover {
+      background: linear-gradient(90deg, #ffb6b9 0%, #b56edc 100%);
+      color: #fff;
+      box-shadow: 0 7px 24px 0 #efd1fb59;
+    }
+    /* 채팅 메시지 영역 */
     .chat-messages {
       flex: 1 1 auto;
-      padding: 32px 28px 24px 28px;
+      padding: 46px 54px 36px 54px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
+      background: linear-gradient(115deg, #f8f5ff 0%, #fdf9ff 100%);
+      gap: 0.5rem;
+      scroll-behavior: smooth;
+    }
+    /* 메시지 타임라인 */
+    .chat-timestamp {
+      align-self: center;
+      background: #f0eaff;
+      color: #b5a3d6;
+      font-size: 0.99rem;
+      padding: 4px 18px;
+      border-radius: 16px;
+      margin: 18px 0 14px 0;
+      font-weight: 500;
+      box-shadow: 0 2px 8px #ebdcff0a;
+      letter-spacing: 0.04em;
     }
     .message-row {
       display: flex;
-      margin-bottom: 18px;
+      margin-bottom: 11px;
+      gap: 8px;
     }
-    .message-row.me {
-      justify-content: flex-end;
-    }
+    .message-row.me { justify-content: flex-end;}
+    .message-row.you { justify-content: flex-start;}
     .message-bubble {
-      max-width: 56%;
-      padding: 14px 18px;
-      border-radius: 20px;
-      font-size: 1.07rem;
+      max-width: 440px;
+      padding: 17px 24px 15px 20px;
+      border-radius: 20px 20px 20px 4px;
+      font-size: 1.12rem;
       background: #eee;
-      color: #222;
+      color: #212033;
       position: relative;
       word-break: break-word;
       transition: background .15s;
+      box-shadow: 0 2px 18px 0 #efd9f516;
+      font-weight: 500;
     }
     .message-row.me .message-bubble {
-      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
+      background: linear-gradient(108deg, #764ba2 36%, #667eea 100%);
       color: #fff;
-      border-bottom-right-radius: 4px;
-      border-bottom-left-radius: 20px;
-      margin-left: 0;
+      border-radius: 20px 20px 4px 20px;
+      box-shadow: 0 5px 30px 0 #a786e914;
     }
     .message-row.you .message-bubble {
-      background: #eee;
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 20px;
-      margin-right: 0;
+      background: #ece7f6;
+      border-radius: 20px 20px 20px 4px;
+      color: #252247;
     }
     .message-time {
-      font-size: 0.83rem;
-      color: #aaa;
-      margin: 5px 10px 0 10px;
+      font-size: 0.96rem;
+      color: #bababa;
+      margin: 3px 8px 0 8px;
       align-self: flex-end;
+      min-width: 44px;
+      text-align: right;
+      font-weight: 400;
     }
+    /* 채팅 입력 */
     .chat-input-area {
-      padding: 16px 26px 16px 18px;
-      background: #fff;
-      border-top: 1px solid #e6e6e6;
+      padding: 26px 46px 26px 46px;
+      background: #faf6fd;
+      border-top: 1px solid #efe2ff;
       display: flex;
-      gap: 16px;
+      gap: 18px;
       align-items: center;
+      position: relative;
     }
     .chat-input-area input[type="text"] {
       flex: 1 1 auto;
-      border-radius: 18px;
-      border: 1px solid #e0e0e0;
-      padding: 12px 20px;
-      font-size: 1.08rem;
+      border-radius: 17px;
+      border: 1.8px solid #e0d3ff;
+      background: #fff;
+      padding: 16px 28px;
+      font-size: 1.13rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.13s;
+      font-weight: 500;
+      box-shadow: 0 1px 4px 0 #e3d9ff1c;
     }
     .chat-input-area input[type="text"]:focus {
-      border-color: #764ba2;
-      box-shadow: 0 0 4px #764ba232;
+      border-color: #b56edc;
+      box-shadow: 0 0 5px #b56edc37;
     }
     .chat-input-area button {
       border: none;
-      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
+      background: linear-gradient(108deg, #764ba2 36%, #667eea 100%);
       color: #fff;
       border-radius: 50%;
-      width: 44px; height: 44px;
+      width: 54px; height: 54px;
       font-size: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.17s;
+      transition: background 0.16s;
       cursor: pointer;
+      box-shadow: 0 2px 8px 0 #bda4e933;
     }
     .chat-input-area button:hover {
-      background: linear-gradient(135deg, #667eea 30%, #764ba2 100%);
+      background: linear-gradient(108deg, #667eea 36%, #764ba2 100%);
     }
-
-    /* 모바일 대응 */
-    @media (max-width: 990px) {
+    /* 모바일 */
+    @media (max-width: 900px) {
       .chat-container {
-        flex-direction: column;
-        min-width: 320px;
-        max-width: 98vw;
-        height: 90vh;
+        min-width: 0;
+        max-width: 99vw;
+        height: 98vh;
+        margin: 0;
+        border-radius: 0;
       }
-      .sidebar {
-        width: 100%;
-        height: 220px;
-        border-right: none;
-        border-bottom: 1px solid #e6e6e6;
-        flex-direction: row;
-        overflow-x: auto;
-        overflow-y: hidden;
+      .chat-header, .chat-input-area {
+        padding: 13px 7vw 13px 6vw;
       }
-      .chat-list li { flex-direction: column; padding: 12px; min-width: 120px;}
-      .chat-list .user-info { align-items: center; text-align: center;}
-      .chat-main { min-height: 330px; }
+      .chat-messages {
+        padding: 8vw 5vw 4vw 5vw;
+      }
+      .mypage-btn { top: 1rem; right: 1rem; font-size: 0.97rem; padding: 0.45rem 0.7rem 0.45rem 0.8rem;}
+    }
+    @media (max-width: 480px) {
+      .chat-header, .chat-input-area, .chat-messages {
+        padding-left: 2vw; padding-right: 2vw;
+      }
+      .chat-messages { padding-top: 8vw;}
+      .mypage-btn { display: none; } /* 필요시 노출 조정 */
     }
   </style>
 </head>
 <body>
+
+
   <div class="chat-container">
-    <!-- 좌측 DM 리스트(친구목록) -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <i class="fa fa-comment-dots"></i> 채팅
-      </div>
-      <ul class="chat-list">
-        <li class="active">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
-          <div class="user-info">
-            <div class="user-name">김민경</div>
-            <div class="last-message">네~ 내일 오후에 만날까요?</div>
-          </div>
-          <div class="message-time">13:20</div>
-        </li>
-        <li>
-          <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="profile">
-          <div class="user-info">
-            <div class="user-name">홍길동</div>
-            <div class="last-message">감사합니다!</div>
-          </div>
-          <div class="message-time">어제</div>
-        </li>
-        <!-- ... 추가 친구/DM -->
-      </ul>
-    </aside>
-    <!-- 메인 채팅창 -->
-    <main class="chat-main">
-      <div class="chat-main-header">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
-        <span class="user-name">김민경</span>
-        <span class="status-dot"></span>
-      </div>
-      <div class="chat-messages">
-        <!-- 상대 메시지 -->
-        <div class="message-row you">
-          <div class="message-bubble">안녕하세요! 혹시 자료 좀 보내주실 수 있나요?</div>
-          <div class="message-time">13:19</div>
+    <header class="chat-header">
+      <div class="chat-profile">
+        <img id="opponentProfile" src="" alt="상대 프로필">
+        <div>
+          <span class="user-name" id="opponentName"></span>
+          <span class="status-dot" id="opponentStatus"></span>
         </div>
-        <!-- 내 메시지 -->
-        <div class="message-row me">
-          <div class="message-bubble">네~ 내일 오후에 만날까요?</div>
-          <div class="message-time">13:20</div>
-        </div>
-        <!-- ... 추가 메시지 -->
       </div>
-      <form class="chat-input-area" autocomplete="off" onsubmit="event.preventDefault();">
-        <input type="text" placeholder="메시지를 입력하세요..." />
-        <button type="submit"><i class="fa fa-paper-plane"></i></button>
-      </form>
-    </main>
+      <button class="end-chat-btn" onclick="endChat()">
+        <i class="fa-solid fa-right-from-bracket"></i> 채팅 종료
+      </button>
+    </header>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-input-area" autocomplete="off" onsubmit="sendMessage(event);">
+      <input id="msgInput" type="text" placeholder="메시지를 입력하세요..." autocomplete="off"/>
+      <button type="submit"><i class="fa fa-paper-plane"></i></button>
+    </form>
   </div>
+  <!-- sockjs, stompjs CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+   <script>
+    // 이 부분은 백엔드에서 Thymeleaf/JSP 등으로 렌더링하거나, 
+    // 또는 /api/chat/info 같은 REST API로 받아온 값이라고 가정
+    window.CHAT_INFO = {
+      myUserId: '${myUserId}', // 예: 20240001
+      myName: '${myName}',     // 예: 김민경
+      myProfile: '${myProfileUrl}', // 프로필 이미지 URL
+      opponentUserId: '${opponentUserId}',
+      opponentName: '${opponentName}',
+      opponentProfile: '${opponentProfileUrl}'
+    };
+  </script>
+  <script src="/js/chat.js"></script>
+  <script>
+    // 채팅 종료 시 매칭 페이지로 이동
+    function endChat() {
+      if(confirm('채팅을 종료하고 매칭 페이지로 돌아가시겠습니까?')) {
+        window.location.href = '/match';
+      }
+    }
+
+    // 메시지 전송 (프론트 데모)
+    function sendMessage(event) {
+      event.preventDefault();
+      const input = document.getElementById('msgInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      // 메시지 DOM 추가 (서비스에서는 서버로 전송)
+      const chatMessages = document.getElementById('chatMessages');
+      const time = new Date();
+      const timeStr = time.getHours().toString().padStart(2,'0') + ':' + time.getMinutes().toString().padStart(2,'0');
+
+      const msgRow = document.createElement('div');
+      msgRow.className = 'message-row me';
+      msgRow.innerHTML = `<div class="message-bubble">${message}</div><div class="message-time">${timeStr}</div>`;
+      chatMessages.appendChild(msgRow);
+
+      input.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
 </body>
 </html>

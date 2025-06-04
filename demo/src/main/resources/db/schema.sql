@@ -63,7 +63,6 @@ CREATE TABLE matches (
     match_id BIGINT AUTO_INCREMENT PRIMARY KEY,   -- 매칭 고유 ID
     user1_id VARCHAR(20) NOT NULL,               -- 사용자1
     user2_id VARCHAR(20) NOT NULL,               -- 사용자2
-    department VARCHAR(50),                      -- 매칭된 학부
     school_year INT,                             -- 매칭된 학년
     major VARCHAR(50),                           -- 매칭된 학과
     status VARCHAR(20) DEFAULT 'WAITING',        -- 상태(대기, 매칭완료 등)

@@ -13,7 +13,6 @@ import java.util.List;
 @Controller
 public class MainController {
 
-	// test
 	// http://localhost:8080/
     @GetMapping("/")
     public String index() {

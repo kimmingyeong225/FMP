@@ -1,7 +1,7 @@
 package com.fmp.demo.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fmp.demo.dto.UserDTO;
 import com.fmp.demo.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -24,16 +25,15 @@ public class UserController {
 //	}
 
 	@PostMapping("/login")
-	public ResponseEntity<?> login(
-	    @RequestParam("userId") String userId,
-	    @RequestParam("password") String password
-	) {
-	    UserDTO userDTO = userService.login(userId, password);
-	    if (userDTO != null) {
-	        return ResponseEntity.ok(userDTO);
-	    } else {
-	        return ResponseEntity.status(401).body("아이디 또는 비밀번호가 일치하지 않습니다.");
-	    }
+	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password,
+			HttpSession session, Model model) {
+		UserDTO userDTO = userService.login(userId, password);
+		if (userDTO != null) {
+			session.setAttribute("userId", userId); // 세션에 저장
+			return "redirect:/match";
+		} else {
+			model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
+			return "signIn";
+		}
 	}
-
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>DSU 랜덤 매칭 로그인</title>
@@ -8,117 +8,154 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <!-- AOS -->
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <!-- Pretendard & Montserrat 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body, html {
-      height: 100%;
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      position: relative;
+    html, body {
+      min-height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #e9d0ff 100%);
+      margin: 0; padding: 0;
+      font-family: 'Pretendard', 'Montserrat', 'Segoe UI', Arial, sans-serif;
       overflow-x: hidden;
     }
     #particles-js {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 0;
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      top: 0; left: 0;
+      z-index: 1;
+      pointer-events: none;
     }
     .login-card {
       z-index: 10;
       position: relative;
-      max-width: 400px;
-      margin: 9vh auto 0 auto;
-      background: rgba(255,255,255,0.95);
-      border-radius: 2rem;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.20), 0 0.5rem 1rem rgba(118,75,162,0.10);
-      padding: 2.5rem 2rem 2rem 2rem;
-      animation: fadein 0.85s;
-      backdrop-filter: blur(1.5px);
+      max-width: 480px;
+      min-width: 350px;
+      width: 100%;
+      margin: 6vh auto 0 auto;
+      background: rgba(255,255,255,0.97);
+      border-radius: 2.5rem;
+      box-shadow: 0 16px 60px 0 #a48fcd1f, 0 2px 16px #e3b2fb2b;
+      padding: 3.3rem 2.5rem 2.7rem 2.5rem;
+      animation: fadein 1s;
+      backdrop-filter: blur(2px);
+      display: flex;
+      flex-direction: column;
     }
     @keyframes fadein {
-      from { opacity: 0; transform: translateY(32px);}
+      from { opacity: 0; transform: translateY(48px);}
       to   { opacity: 1; transform: none;}
     }
     .brand-title {
       text-align: center;
-      font-size: 2.1rem;
-      font-weight: 700;
-      color: #667eea;
-      letter-spacing: 2px;
-      margin-bottom: 2.2rem;
-      margin-top: 0.3rem;
+      font-size: 2.3rem;
+      font-weight: 800;
+      font-family: 'Montserrat', 'Pretendard', Arial, sans-serif;
+      color: #726be5;
+      letter-spacing: 1.3px;
+      margin-bottom: 2.3rem;
+      margin-top: 0.1rem;
+      text-shadow: 0 2px 18px #ddd1f31b;
     }
     .form-label {
-      font-weight: 500;
-      color: #764ba2;
-      letter-spacing: 1px;
+      font-weight: 600;
+      color: #8561d6;
+      font-size: 1.11rem;
+      letter-spacing: 0.2px;
+      margin-bottom: 0.22rem;
+    }
+    .form-control {
+      border-radius: 1.2rem;
+      border: 1.5px solid #ece2fa;
+      background: #f8f5fd;
+      font-size: 1.15rem;
+      padding: 1.07rem 1.1rem;
+      margin-bottom: 1.12rem;
+      font-family: 'Pretendard', Arial, sans-serif;
+      box-shadow: none;
+      transition: border-color .16s, box-shadow .16s;
+    }
+    .form-control:focus {
+      border-color: #c0a6e4;
+      background: #fff;
+      box-shadow: 0 0 0 1.2px #bbbefa33;
     }
     .login-btn {
-      font-weight: 600;
-      font-size: 1.15rem;
+      font-family: 'Montserrat', 'Pretendard', Arial, sans-serif;
+      font-weight: 800;
+      font-size: 1.24rem;
       border-radius: 2rem;
-      padding: 0.75rem;
-      margin-bottom: 0.2rem;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      padding: 0.98rem;
+      margin-bottom: 0.7rem;
+      background: linear-gradient(90deg, #8d87e3 0%, #c18ef9 100%);
       border: none;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 3px 16px rgba(102,126,234,0.09);
+      transition: background 0.19s, box-shadow 0.17s, transform 0.13s;
+      box-shadow: 0 4px 24px #a78cfa19;
+      letter-spacing: 1.6px;
+      color: #fff;
+      animation: pulse 1.3s infinite;
+    }
+    @keyframes pulse {
+      0% {box-shadow: 0 4px 24px #a78cfa17;}
+      50% {box-shadow: 0 7px 34px #d1a2fa25;}
+      100% {box-shadow: 0 4px 24px #a78cfa17;}
     }
     .login-btn:hover {
-      background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
-      box-shadow: 0 6px 32px rgba(118,75,162,0.12);
-      transform: scale(1.04);
+      background: linear-gradient(90deg, #c18ef9 0%, #8d87e3 100%);
+      color: #fff;
+      transform: scale(1.02);
+      box-shadow: 0 10px 34px 0 #cfbcf729;
     }
     .sub-actions {
       display: flex;
       justify-content: space-between;
       margin-top: 1rem;
-      font-size: 0.99rem;
+      font-size: 1.07rem;
     }
     .sub-actions a {
-      color: #764ba2;
+      color: #a57cd3;
       text-decoration: none;
       transition: color 0.2s;
+      font-weight: 500;
+      letter-spacing: 0.8px;
     }
     .sub-actions a:hover {
-      color: #403056;
+      color: #6352b6;
       text-decoration: underline;
-    }
-    .form-control:focus {
-      border-color: #764ba2;
-      box-shadow: 0 0 0 0.1rem #764ba255;
     }
     .login-footer {
       text-align: center;
       margin-top: 2.5rem;
-      color: #999;
-      font-size: 0.97rem;
+      color: #bbb;
+      font-size: 1.02rem;
+      letter-spacing: 0.19px;
     }
     .back-link {
-      color: #667eea;
-      font-size: 1.1rem;
+      color: #a57cd3;
+      font-size: 1.14rem;
       text-decoration: none;
       transition: color 0.2s;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.8rem;
       display: inline-block;
+      font-weight: 600;
+      margin-left: 0.1rem;
     }
     .back-link:hover {
-      color: #403056;
+      color: #7c4de7;
       text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .login-card { max-width: 97vw; padding: 1.1rem 0.2rem 0.7rem 0.2rem; }
+      .brand-title { font-size: 1.13rem; }
     }
   </style>
 </head>
 <body>
-  <!-- particles.js 배경 -->
+  <!-- 파티클 배경 -->
   <div id="particles-js"></div>
-
   <!-- 로그인 카드 -->
   <div class="login-card animate__animated animate__fadeInDown">
-    <a href="/" class="back-link animate__animated animate__fadeInLeft">< 돌아가기</a>
+    <a href="/" class="back-link animate__animated animate__fadeInLeft">&lt; 돌아가기</a>
     <div class="brand-title animate__animated animate__fadeIn">DSU School Matcher</div>
     <form method="post" action="/api/user/login" autocomplete="on" data-aos="fade-up">
       <div class="mb-3">
@@ -144,15 +181,40 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <!-- AOS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // particles.js 배경
-    particlesJS.load('particles-js', 'https://cdn.jsdelivr.net/gh/VincentGarreau/particles.js/assets/particles.json', function() {
-      // console.log('particles.js loaded');
+    // 파티클 (밝고 은은한 보라/하양/파스텔)
+    particlesJS("particles-js", {
+      "particles": {
+        "number": {"value": 34, "density": {"enable": true, "value_area": 800}},
+        "color": {"value": ["#c1bbef", "#e5ddfb", "#fff", "#b3a9e6"]},
+        "shape": {"type": "circle"},
+        "opacity": {
+          "value": 0.20,
+          "random": true,
+          "anim": {"enable": true, "speed": 0.6, "opacity_min": 0.1, "sync": false}
+        },
+        "size": {
+          "value": 18,
+          "random": true,
+          "anim": {"enable": false, "speed": 10, "size_min": 7, "sync": false}
+        },
+        "line_linked": {"enable": false},
+        "move": {
+          "enable": true,
+          "speed": 1.2,
+          "direction": "top",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {"onhover": {"enable": false},"onclick": {"enable": false},"resize": true},
+      },
+      "retina_detect": true
     });
-    // AOS 애니메이션
-    AOS.init();
   </script>
 </body>
 </html>
