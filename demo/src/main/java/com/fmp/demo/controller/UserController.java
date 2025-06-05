@@ -19,17 +19,19 @@ public class UserController {
 
 	private final UserService userService;
 
-//	@GetMapping("/login")
-//	public String loginPage() {
-//		return "signIn"; //templates/signIn.html 파일명
-//	}
-
 	@PostMapping("/login")
-	public String login(@RequestParam("userId") String userId, @RequestParam("password") String password,
-			HttpSession session, Model model) {
+	public String login(@RequestParam("userId") String userId,
+						@RequestParam("password") String password,
+						HttpSession session,
+						Model model) {
+
 		UserDTO userDTO = userService.login(userId, password);
+
 		if (userDTO != null) {
-			session.setAttribute("userId", userId); // 세션에 저장
+			// ✅ 세션에 userId, studentId 모두 저장
+			session.setAttribute("userId", userDTO.getUserId());
+			session.setAttribute("studentId", userDTO.getStudentId()); // ⭐️ 추가된 부분
+
 			return "redirect:/match";
 		} else {
 			model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");
