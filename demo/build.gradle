@@ -29,6 +29,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// test
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
 
 	// ★ MyBatis 추가 (아래 한 줄만 넣어주면 됨!)
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
