@@ -222,14 +222,14 @@
   </style>
 </head>
 <body>
-  <!-- 마이페이지 버튼 (오른쪽 상단 고정) -->
-  <a href="/mypage" class="mypage-btn">
-    <span>마이페이지</span>
-    <svg width="23" height="23" fill="none" viewBox="0 0 20 20">
-      <circle cx="10" cy="7" r="4.5" stroke="#b56edc" stroke-width="1.6" fill="white"/>
-      <path d="M4 17c0-2.5 2.9-4 6-4s6 1.5 6 4" stroke="#b56edc" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-    </svg>
-  </a>
+	<!-- 마이페이지 버튼 (오른쪽 상단 고정) -->
+	<a th:href="@{/mypage}" class="mypage-btn">
+	  <span>마이페이지</span>
+	  <svg width="23" height="23" fill="none" viewBox="0 0 20 20">
+	    <circle cx="10" cy="7" r="4.5" stroke="#b56edc" stroke-width="1.6" fill="white"/>
+	    <path d="M4 17c0-2.5 2.9-4 6-4s6 1.5 6 4" stroke="#b56edc" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+	  </svg>
+	</a>
   <!-- 파티클 배경 -->
   <div id="particles-js"></div>
   <div class="match-card animate__animated animate__fadeInDown">
