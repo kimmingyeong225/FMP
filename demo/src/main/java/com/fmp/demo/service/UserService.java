@@ -24,5 +24,9 @@ private final UserRepository userRepository;
         dto.setPassword(null); // ← 응답에 비밀번호는 포함하지 않도록!
         return dto;
     }
-
+    
+    //회원가입용 메서드
+    public int registerUser(User user) {
+        return userRepository.insertUser(user);
+    }
 }

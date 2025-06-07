@@ -19,5 +19,32 @@
         LIMIT 1
     </select>
     
+  <!-- 회원가입(insert만 하기 (생성 -> 회원가입할 때 사용자 생성? 이런 느낌)) -->
+    <insert id="insertUser" parameterType="com.fmp.demo.repository.model.User">
+  INSERT INTO users (
+    student_id,
+    department,
+    school_year,
+    major,
+    gender,
+    name,
+    profile_image,
+    phone,
+    user_id,
+    password
+  ) VALUES (
+    #{studentId},
+    #{department},
+    #{schoolYear},
+    #{major},
+    #{gender},
+    #{name},
+    #{profileImage},
+    #{phone},
+    #{userId},
+    #{password}
+  );
+</insert>
+
     
 </mapper>

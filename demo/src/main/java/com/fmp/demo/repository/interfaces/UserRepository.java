@@ -16,4 +16,12 @@ public interface UserRepository {
 	//로그인 기능
 	public User findByUserIdAndPassword(@Param("userId") String userId, @Param("password") String password);
 	
+	//회원가입용 메서드 추가
+	
+	/**
+	 * 회원가입
+	 */
+	// user 생성
+	public int insertUser(User user);
+	
 }
