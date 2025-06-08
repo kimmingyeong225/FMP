@@ -34,6 +34,7 @@ public class User {
 	@Lob
 	@Column(name = "profile_image")
 	// 프로필 이미지 
+	// TODO 추후 수정
 	private byte[] profileImage;
 	
     @PrePersist
