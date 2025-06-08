@@ -3,6 +3,7 @@ package com.fmp.demo.repository.interfaces;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.fmp.demo.dto.MatchDTO;
 
@@ -11,19 +12,28 @@ import com.fmp.demo.dto.MatchDTO;
 @Mapper
 public interface MatchRepository {
 	
-	 // 1. 매칭 생성(저장)
+	  /** 1. 매칭 가능한 사용자 후보 조회 */
+    List<String> findAvailableUserIds(
+        @Param("schoolYear") int schoolYear,
+        @Param("major") String major
+    );
+
+    /** 2. 매칭 생성(저장) */
     int createMatch(MatchDTO matchDTO);
 
-    // 2. 매칭 단건 조회
-    MatchDTO getMatchById(Long matchId);
+    /** 3. 단건 조회 (matchId 기준) */
+    MatchDTO getMatchById(@Param("matchId") Long matchId);
 
-    // 3. 내 매칭 전체 조회 (userId 기준)
-    List<MatchDTO> getMatchesByUserId(String userId);
+    /** 4. 내 매칭 전체 조회 (userId 기준) */
+    List<MatchDTO> getMatchesByUserId(@Param("userId") String userId);
 
-    // 4. 매칭 상태 변경(업데이트)
-    int updateMatchStatus(Long matchId, String status);
+    /** 5. 매칭 상태 변경(업데이트) */
+    int updateMatchStatus(
+        @Param("matchId") Long matchId,
+        @Param("status") String status
+    );
 
-    // 5. 매칭 삭제(종료)
-    int deleteMatch(Long matchId);
+    /** 6. 매칭 삭제(종료) */
+    int deleteMatch(@Param("matchId") Long matchId);
 
 }

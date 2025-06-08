@@ -18,8 +18,7 @@ public class MatchDTO {
 
     private Long matchId;       
     private String user1Id;        
-    private String user2Id;        
-    private String department;     
+    private String user2Id;            
     private Integer schoolYear;   
     private String major;          
     private String status;        
