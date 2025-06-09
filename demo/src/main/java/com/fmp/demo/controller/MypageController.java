@@ -73,11 +73,12 @@ public class MypageController {
     public String deleteUser(HttpSession session) {
         String studentId = (String) session.getAttribute("studentId");
         if (studentId != null) {
-            mypageService.withdrawUser(studentId);
-            session.invalidate();
+            mypageService.withdrawUser(studentId); // 하드 삭제
+            session.invalidate(); // 로그아웃 처리
         }
-        return "redirect:/";
+        return "redirect:/"; // 메인 페이지로 바로 이동
     }
+
     
     /**
      * 4) 로그아웃

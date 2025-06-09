@@ -35,11 +35,10 @@
   </update>
 
   <!-- 3. 회원 탈퇴 -->
-  <update id="withdrawUser" parameterType="String">
-    UPDATE users
-    SET is_deleted = TRUE
-    WHERE student_id = #{studentId}
-      AND is_deleted = FALSE
-  </update>
+<delete id="withdrawUser" parameterType="String">
+  DELETE FROM users
+  WHERE student_id = #{studentId}
+</delete>
+
 
 </mapper>
