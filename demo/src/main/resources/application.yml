@@ -6,10 +6,12 @@ server:
       force: true
 
 spring:
-  mvc:
-    view: 
-      prefix: /WEB-INF/view
-      suffix: .jsp
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
 
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/db_fmp_project?serverTimezone=UTC&characterEncoding=UTF-8

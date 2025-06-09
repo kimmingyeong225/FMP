@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>FMP Chat - 채팅</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Optional: FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .chat-container {
+      max-width: 900px;
+      min-height: 600px;
+      margin: 40px auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      background: #fff;
+      display: flex;
+      height: 80vh;
+    }
+    .sidebar {
+      width: 320px;
+      background: #f5f6fa;
+      border-right: 1px solid #e6e6e6;
+      overflow-y: auto;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 24px 20px 12px 20px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: #764ba2;
+      border-bottom: 1px solid #e6e6e6;
+      background: #fff;
+    }
+    .chat-list {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .chat-list li {
+      padding: 18px 20px 18px 20px;
+      border-bottom: 1px solid #e6e6e6;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background 0.2s;
+      background: none;
+    }
+    .chat-list li.active, .chat-list li:hover {
+      background: #e9e6f5;
+    }
+    .chat-list img {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 12px;
+      border: 2px solid #764ba2;
+    }
+    .chat-list .user-info {
+      flex: 1;
+    }
+    .chat-list .user-name {
+      font-weight: 500;
+      font-size: 1.08rem;
+      margin-bottom: 3px;
+    }
+    .chat-list .last-message {
+      font-size: 0.97rem;
+      color: #666;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 140px;
+    }
+    .chat-list .message-time {
+      font-size: 0.80rem;
+      color: #aaa;
+      margin-left: auto;
+    }
+
+    .chat-main {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      background: #f7f5ff;
+    }
+    .chat-main-header {
+      padding: 18px 26px;
+      background: #fff;
+      border-bottom: 1px solid #e6e6e6;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .chat-main-header img {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 2px solid #764ba2;
+    }
+    .chat-main-header .user-name {
+      font-weight: 500;
+      font-size: 1.15rem;
+    }
+    .chat-main-header .status-dot {
+      width: 11px; height: 11px;
+      background: #00d386;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 6px;
+    }
+
+    .chat-messages {
+      flex: 1 1 auto;
+      padding: 32px 28px 24px 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .message-row {
+      display: flex;
+      margin-bottom: 18px;
+    }
+    .message-row.me {
+      justify-content: flex-end;
+    }
+    .message-bubble {
+      max-width: 56%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      font-size: 1.07rem;
+      background: #eee;
+      color: #222;
+      position: relative;
+      word-break: break-word;
+      transition: background .15s;
+    }
+    .message-row.me .message-bubble {
+      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 20px;
+      margin-left: 0;
+    }
+    .message-row.you .message-bubble {
+      background: #eee;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 20px;
+      margin-right: 0;
+    }
+    .message-time {
+      font-size: 0.83rem;
+      color: #aaa;
+      margin: 5px 10px 0 10px;
+      align-self: flex-end;
+    }
+    .chat-input-area {
+      padding: 16px 26px 16px 18px;
+      background: #fff;
+      border-top: 1px solid #e6e6e6;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .chat-input-area input[type="text"] {
+      flex: 1 1 auto;
+      border-radius: 18px;
+      border: 1px solid #e0e0e0;
+      padding: 12px 20px;
+      font-size: 1.08rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .chat-input-area input[type="text"]:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 4px #764ba232;
+    }
+    .chat-input-area button {
+      border: none;
+      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
+      color: #fff;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.17s;
+      cursor: pointer;
+    }
+    .chat-input-area button:hover {
+      background: linear-gradient(135deg, #667eea 30%, #764ba2 100%);
+    }
+
+    /* 모바일 대응 */
+    @media (max-width: 990px) {
+      .chat-container {
+        flex-direction: column;
+        min-width: 320px;
+        max-width: 98vw;
+        height: 90vh;
+      }
+      .sidebar {
+        width: 100%;
+        height: 220px;
+        border-right: none;
+        border-bottom: 1px solid #e6e6e6;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .chat-list li { flex-direction: column; padding: 12px; min-width: 120px;}
+      .chat-list .user-info { align-items: center; text-align: center;}
+      .chat-main { min-height: 330px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <!-- 좌측 DM 리스트(친구목록) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <i class="fa fa-comment-dots"></i> 채팅
+      </div>
+      <ul class="chat-list">
+        <li class="active">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
+          <div class="user-info">
+            <div class="user-name">김민경</div>
+            <div class="last-message">네~ 내일 오후에 만날까요?</div>
+          </div>
+          <div class="message-time">13:20</div>
+        </li>
+        <li>
+          <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="profile">
+          <div class="user-info">
+            <div class="user-name">홍길동</div>
+            <div class="last-message">감사합니다!</div>
+          </div>
+          <div class="message-time">어제</div>
+        </li>
+        <!-- ... 추가 친구/DM -->
+      </ul>
+    </aside>
+    <!-- 메인 채팅창 -->
+    <main class="chat-main">
+      <div class="chat-main-header">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
+        <span class="user-name">김민경</span>
+        <span class="status-dot"></span>
+      </div>
+      <div class="chat-messages">
+        <!-- 상대 메시지 -->
+        <div class="message-row you">
+          <div class="message-bubble">안녕하세요! 혹시 자료 좀 보내주실 수 있나요?</div>
+          <div class="message-time">13:19</div>
+        </div>
+        <!-- 내 메시지 -->
+        <div class="message-row me">
+          <div class="message-bubble">네~ 내일 오후에 만날까요?</div>
+          <div class="message-time">13:20</div>
+        </div>
+        <!-- ... 추가 메시지 -->
+      </div>
+      <form class="chat-input-area" autocomplete="off" onsubmit="event.preventDefault();">
+        <input type="text" placeholder="메시지를 입력하세요..." />
+        <button type="submit"><i class="fa fa-paper-plane"></i></button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
