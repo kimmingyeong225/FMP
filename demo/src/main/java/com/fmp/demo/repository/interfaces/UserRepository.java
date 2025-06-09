@@ -18,7 +18,7 @@ public interface UserRepository {
 	//로그인 기능
 	public User findByUserIdAndPassword(@Param("userId") String userId, @Param("password") String password);
 	
-	//회원가입용 메서드 추가
+	//회원가입용 메서드 추가!
 	//아이디 비밀번호 찾기
 	@Select("SELECT user_id FROM users WHERE name = #{name} AND phone = #{phone}")
 	String findUserIdByNameAndPhone(@Param("name") String name, @Param("phone") String phone);

@@ -17,7 +17,7 @@ public class FindController {
 
     @GetMapping("/find-account")
     public String findAccountPage() {
-        return "findAccount"; // templates/findAccount.html 이라는 파일을 찾아서 보여줌
+        return "findAccount"; //  templates/findAccount.html 이라는 파일을 찾아서 보여줌.
     }
     @PostMapping("/find-id")
     @ResponseBody
