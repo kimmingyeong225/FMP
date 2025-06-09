@@ -34,7 +34,16 @@ public class SignUpController {
         user.setPassword(dto.getPassword());
         user.setName(dto.getName());
         user.setPhone(dto.getPhone());
-        user.setGender(dto.getGender());
+        
+     // ✅ 성별 변환 로직
+        String genderInput = dto.getGender();
+        if (genderInput.equals("남자")) {
+            user.setGender("M");
+        } else if (genderInput.equals("여자")) {
+            user.setGender("F");
+        } else {
+            user.setGender("N");
+        }
         user.setDepartment(dto.getDepartment());
         user.setMajor(dto.getMajor());
         user.setSchoolYear(dto.getSchoolYear());
