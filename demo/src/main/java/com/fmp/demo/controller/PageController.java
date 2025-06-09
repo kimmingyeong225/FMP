@@ -10,4 +10,9 @@ public class PageController {
     public String loginPage() {
         return "signIn";
     }
+    
+    @GetMapping("/match")
+    public String matchPage() {
+    	return "match";
+    }
 }

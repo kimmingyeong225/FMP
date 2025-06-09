@@ -1,282 +1,511 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>FMP Chat - 채팅</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Bootstrap 5 CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Optional: FontAwesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-  <style>
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    <meta charset="UTF-8" />
+    <title>DSU 친구 랜덤 매칭 채팅</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- SockJS & Stomp.js -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <!-- particles.js -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Pretendard:wght@400;600;800&display=swap');
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
       min-height: 100vh;
     }
-    .chat-container {
-      max-width: 900px;
-      min-height: 600px;
-      margin: 40px auto;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
-      background: #fff;
-      display: flex;
-      height: 80vh;
-    }
-    .sidebar {
-      width: 320px;
-      background: #f5f6fa;
-      border-right: 1px solid #e6e6e6;
-      overflow-y: auto;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .sidebar-header {
-      padding: 24px 20px 12px 20px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      color: #764ba2;
-      border-bottom: 1px solid #e6e6e6;
-      background: #fff;
-    }
-    .chat-list {
-      flex: 1 1 auto;
-      overflow-y: auto;
-      padding: 0;
-      margin: 0;
-      list-style: none;
-    }
-    .chat-list li {
-      padding: 18px 20px 18px 20px;
-      border-bottom: 1px solid #e6e6e6;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      transition: background 0.2s;
-      background: none;
-    }
-    .chat-list li.active, .chat-list li:hover {
-      background: #e9e6f5;
-    }
-    .chat-list img {
-      width: 46px; height: 46px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-right: 12px;
-      border: 2px solid #764ba2;
-    }
-    .chat-list .user-info {
-      flex: 1;
-    }
-    .chat-list .user-name {
-      font-weight: 500;
-      font-size: 1.08rem;
-      margin-bottom: 3px;
-    }
-    .chat-list .last-message {
-      font-size: 0.97rem;
-      color: #666;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 140px;
-    }
-    .chat-list .message-time {
-      font-size: 0.80rem;
-      color: #aaa;
-      margin-left: auto;
-    }
-
-    .chat-main {
-      flex: 1 1 0;
-      display: flex;
-      flex-direction: column;
-      background: #f7f5ff;
-    }
-    .chat-main-header {
-      padding: 18px 26px;
-      background: #fff;
-      border-bottom: 1px solid #e6e6e6;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .chat-main-header img {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      border: 2px solid #764ba2;
-    }
-    .chat-main-header .user-name {
-      font-weight: 500;
-      font-size: 1.15rem;
-    }
-    .chat-main-header .status-dot {
-      width: 11px; height: 11px;
-      background: #00d386;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 6px;
-    }
-
-    .chat-messages {
-      flex: 1 1 auto;
-      padding: 32px 28px 24px 28px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .message-row {
-      display: flex;
-      margin-bottom: 18px;
-    }
-    .message-row.me {
-      justify-content: flex-end;
-    }
-    .message-bubble {
-      max-width: 56%;
-      padding: 14px 18px;
-      border-radius: 20px;
-      font-size: 1.07rem;
-      background: #eee;
-      color: #222;
+    body {
+      min-height: 100vh;
+      width: 100vw;
+      background: linear-gradient(120deg, #e6e7ff 0%, #ffe3ee 100%);
+      font-family: 'Pretendard', 'Montserrat', Arial, sans-serif;
       position: relative;
-      word-break: break-word;
-      transition: background .15s;
-    }
-    .message-row.me .message-bubble {
-      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
-      color: #fff;
-      border-bottom-right-radius: 4px;
-      border-bottom-left-radius: 20px;
-      margin-left: 0;
-    }
-    .message-row.you .message-bubble {
-      background: #eee;
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 20px;
-      margin-right: 0;
-    }
-    .message-time {
-      font-size: 0.83rem;
-      color: #aaa;
-      margin: 5px 10px 0 10px;
-      align-self: flex-end;
-    }
-    .chat-input-area {
-      padding: 16px 26px 16px 18px;
-      background: #fff;
-      border-top: 1px solid #e6e6e6;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-    .chat-input-area input[type="text"] {
-      flex: 1 1 auto;
-      border-radius: 18px;
-      border: 1px solid #e0e0e0;
-      padding: 12px 20px;
-      font-size: 1.08rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .chat-input-area input[type="text"]:focus {
-      border-color: #764ba2;
-      box-shadow: 0 0 4px #764ba232;
-    }
-    .chat-input-area button {
-      border: none;
-      background: linear-gradient(135deg, #764ba2 30%, #667eea 100%);
-      color: #fff;
-      border-radius: 50%;
-      width: 44px; height: 44px;
-      font-size: 1.5rem;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.17s;
-      cursor: pointer;
     }
-    .chat-input-area button:hover {
-      background: linear-gradient(135deg, #667eea 30%, #764ba2 100%);
+    #particles-js {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      left: 0; top: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .main-wrap {
+      z-index: 2;
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      left: 0; top: 0;
+      pointer-events: none;
+    }
+    .center-content {
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+    .mini-title {
+      font-family: 'Montserrat', Pretendard, Arial, sans-serif;
+      color: #9d60db;
+      font-size: 1.32rem;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      margin-bottom: 36px;
+      text-align: center;
+      text-shadow: 0 3px 14px #c6b6e620;
+      line-height: 1.1;
+      user-select: none;
+      background: none;
+      pointer-events: auto;
+    }
+    /* 매칭, 매칭대기 - 투명 */
+    #match-div, #matching-div {
+      background: none;
+      border-radius: 0;
+      box-shadow: none;
+      width: 700px;
+      min-width: 480px;
+      min-height: 0;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      position: static;
+      transition: none;
+    }
+    #match-div { animation: fadeInUp 1.05s cubic-bezier(.13,.73,.61,.91);}
+    @keyframes fadeInUp {0%{opacity:0; transform:translateY(80px);} 100%{opacity:1; transform:none;}}
+    #matchBtn {
+      background: linear-gradient(93deg, #ffb6b9 0%, #b56edc 100%);
+      color: #fff;
+      border: none;
+      font-size: 1.25rem;
+      font-weight: 800;
+      padding: 24px 140px;
+      border-radius: 2.5rem;
+      margin-top: 0;
+      letter-spacing: 1.3px;
+      cursor: pointer;
+      box-shadow: 0 7px 38px #debfff1a, 0 3px 12px #bfa8ee13;
+      transition: background 0.16s, transform 0.11s, box-shadow 0.14s;
+      font-family: 'Montserrat', Pretendard, Arial, sans-serif;
+      outline: none;
+      animation: fadeInUp 1.1s cubic-bezier(.17,.67,.83,.67);
+      user-select: none;
+    }
+    #matchBtn:hover {
+      background: linear-gradient(93deg, #b56edc 0%, #ffb6b9 100%);
+      transform: scale(1.045) translateY(-3px);
+      box-shadow: 0 10px 40px #bfa8ee36;
     }
 
-    /* 모바일 대응 */
-    @media (max-width: 990px) {
-      .chat-container {
-        flex-direction: column;
-        min-width: 320px;
-        max-width: 98vw;
-        height: 90vh;
-      }
-      .sidebar {
-        width: 100%;
-        height: 220px;
-        border-right: none;
-        border-bottom: 1px solid #e6e6e6;
-        flex-direction: row;
-        overflow-x: auto;
-        overflow-y: hidden;
-      }
-      .chat-list li { flex-direction: column; padding: 12px; min-width: 120px;}
-      .chat-list .user-info { align-items: center; text-align: center;}
-      .chat-main { min-height: 330px; }
+    #matching-div {
+      justify-content: center;
+      animation: fadeInUp 1.2s;
+      padding-top: 0;
+      padding-bottom: 0;
+      min-height: 0;
     }
-  </style>
+    .matching-wait-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px; height: 100px;
+      background: linear-gradient(135deg, #ffe6f7 50%, #e6bbfe 100%);
+      border-radius: 50%;
+      margin: 0 auto 38px auto;
+      box-shadow: 0 4px 24px #c4a7ef18;
+      font-size: 3.3rem;
+      color: #b56edc;
+      animation: popIn 1s cubic-bezier(.19,.68,.83,.67);
+    }
+    @keyframes popIn {0%{transform:scale(0.7); opacity:0;} 100%{transform:none;opacity:1;}}
+    .matching-wait-msg {
+      font-size: 1.47rem;
+      font-weight: 900;
+      color: #ae63be;
+      text-align: center;
+      margin-bottom: 13px;
+      letter-spacing: 1.7px;
+      background: none;
+    }
+    .matching-sub-msg {
+      color: #bfa6cd;
+      font-size: 1.17rem;
+      text-align: center;
+      margin-bottom: 8px;
+      animation: fadeIn 1s;
+      background: none;
+    }
+    .spinner {
+      margin: 36px auto 12px auto;
+      border: 8px solid #e6d4fc;
+      border-top: 8px solid #b56edc;
+      border-radius: 50%;
+      width: 70px; height: 70px;
+      animation: spin 1.2s linear infinite;
+      background: none;
+    }
+    @keyframes spin {0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);}}
+
+    /* 채팅방만 흰 배경 */
+    #chat-div {
+      max-width: 700px;
+      min-width: 480px;
+      min-height: 500px;
+      margin-top: 0;
+      animation: fadeInUp 1s cubic-bezier(.13,.73,.61,.91);
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      background: #fff;
+      border-radius: 2.1rem;
+      box-shadow: 0 11px 48px 0 #bda4e944, 0 3px 18px 0 #ffe3ee0c;
+      padding: 0;
+      border: 1.5px solid #ebe6f6;
+    }
+    #chat-box {
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 350px;
+      max-height: 450px;
+      background: none;
+      overflow-y: auto;
+      padding: 44px 70px 18px 70px;
+      font-size: 1.23rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    .chat-row {
+      display: flex;
+      margin-bottom: 20px;
+      align-items: flex-end;
+      width: 100%;
+    }
+    .chat-row.me { justify-content: flex-end; }
+    .chat-row.you { justify-content: flex-start; }
+    .bubble {
+      display: inline-block;
+      max-width: 68%;
+      padding: 18px 33px 16px 21px;
+      font-size: 1.17rem;
+      border-radius: 1.8rem 1.8rem 1.8rem 1.2rem;
+      background: #ece7f6;
+      color: #353153;
+      position: relative;
+      font-weight: 500;
+      box-shadow: 0 2px 14px 0 #e5d8fa17;
+      word-break: break-word;
+      line-height: 1.7;
+      transition: background .14s;
+      animation: bubbleIn 0.22s;
+      backdrop-filter: blur(4px);
+    }
+    .chat-row.me .bubble {
+      background: linear-gradient(98deg, #764ba2 0%, #b56edc 93%);
+      color: #fff;
+      border-radius: 1.8rem 1.8rem 1.2rem 1.8rem;
+      margin-left: 34px;
+      margin-right: 0;
+      box-shadow: 0 7px 22px 0 #a786e916;
+      animation: bubbleInRight 0.18s;
+      backdrop-filter: blur(3px);
+    }
+    .chat-row.you .bubble {
+      margin-right: 34px;
+      margin-left: 0;
+    }
+    @keyframes bubbleIn {0% {opacity:0; transform:scale(0.94);} 100% {opacity:1;transform:none;}}
+    @keyframes bubbleInRight {0% {opacity:0; transform:translateX(30px) scale(0.93);} 100%{opacity:1;transform:none;}}
+    .bubble .sender {
+      font-size: 1.11rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+      display: block;
+      color: #b56edc;
+      margin-bottom: 7px;
+      letter-spacing: 0.45px;
+    }
+    .chat-row.me .bubble .sender { color: #ffe3ee;}
+    .bubble .time {
+      font-size: 1.01rem;
+      color: #b4aad0;
+      margin-left: 11px;
+      margin-top: 10px;
+      float: right;
+      font-weight: 400;
+    }
+    .chat-input-bar {
+      width: 100%;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      padding: 20px 62px 32px 62px;
+      box-sizing: border-box;
+      background: none;
+      position: relative;
+    }
+    #message-input {
+      flex: 1 1 auto;
+      border-radius: 1.3rem;
+      border: 1.5px solid #e0d3ff;
+      background: #fff;
+      font-size: 1.22rem;
+      padding: 15px 27px;
+      font-family: inherit;
+      transition: border-color 0.17s, box-shadow 0.13s;
+      font-weight: 500;
+      box-shadow: 0 1px 6px 0 #d8c8f51f;
+      margin: 0;
+    }
+    #message-input:focus {
+      border-color: #b56edc;
+      box-shadow: 0 0 7px #b56edc34;
+      outline: none;
+    }
+    #sendBtn {
+      background: linear-gradient(98deg, #b56edc 0%, #ffb6b9 100%);
+      color: #fff;
+      border: none;
+      font-weight: 800;
+      font-size: 1.21rem;
+      border-radius: 1.5rem;
+      padding: 0.9rem 2.2rem;
+      box-shadow: 0 2px 13px #e4b6ff1b;
+      cursor: pointer;
+      transition: background 0.14s, box-shadow 0.13s, transform 0.13s;
+    }
+    #sendBtn:hover { background: linear-gradient(93deg, #ffb6b9 0%, #b56edc 100%); transform: scale(1.04);}
+    #sendBtn:disabled { background: #e4d8ee; color: #fff; opacity: 0.63;}
+    #leaveBtn {
+      background: linear-gradient(93deg, #b56edc 0%, #fca3b9 100%);
+      color: #fff;
+      font-weight: 800;
+      border: none;
+      font-size: 1.11rem;
+      border-radius: 1.5rem;
+      padding: 0.9rem 1.7rem;
+      margin-left: 3px;
+      box-shadow: 0 2px 12px #e4b6ff15;
+      cursor: pointer;
+      transition: background 0.14s, box-shadow 0.13s, transform 0.13s;
+    }
+    #leaveBtn:hover { background: linear-gradient(93deg, #fca3b9 0%, #b56edc 100%); transform: scale(1.04);}
+    .system-message {
+      color: #b4aad0;
+      font-style: italic;
+      font-size: 1.12rem;
+      text-align: center;
+      padding: 12px 0;
+      letter-spacing: 0.3px;
+      animation: fadeIn 0.6s;
+      width: 100%;
+      margin: 9px auto 8px auto;
+      display: block;
+    }
+    </style>
 </head>
 <body>
-  <div class="chat-container">
-    <!-- 좌측 DM 리스트(친구목록) -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <i class="fa fa-comment-dots"></i> 채팅
+  <div id="particles-js"></div>
+  <div class="main-wrap">
+    <div class="center-content">
+      <div class="mini-title">친구 랜덤 매칭 채팅</div>
+      <!-- 매칭 시작 -->
+      <div id="match-div">
+        <button id="matchBtn">친구 랜덤 매칭 시작!</button>
       </div>
-      <ul class="chat-list">
-        <li class="active">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
-          <div class="user-info">
-            <div class="user-name">김민경</div>
-            <div class="last-message">네~ 내일 오후에 만날까요?</div>
-          </div>
-          <div class="message-time">13:20</div>
-        </li>
-        <li>
-          <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="profile">
-          <div class="user-info">
-            <div class="user-name">홍길동</div>
-            <div class="last-message">감사합니다!</div>
-          </div>
-          <div class="message-time">어제</div>
-        </li>
-        <!-- ... 추가 친구/DM -->
-      </ul>
-    </aside>
-    <!-- 메인 채팅창 -->
-    <main class="chat-main">
-      <div class="chat-main-header">
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile">
-        <span class="user-name">김민경</span>
-        <span class="status-dot"></span>
+      <!-- 매칭중 -->
+      <div id="matching-div" style="display: none;">
+        <div class="matching-wait-icon">🤝</div>
+        <div class="matching-wait-msg">친구를 찾는 중...</div>
+        <div class="matching-sub-msg">새로운 친구와 대화할 준비 중입니다.<br/>잠시만 기다려 주세요!</div>
+        <div class="spinner"></div>
       </div>
-      <div class="chat-messages">
-        <!-- 상대 메시지 -->
-        <div class="message-row you">
-          <div class="message-bubble">안녕하세요! 혹시 자료 좀 보내주실 수 있나요?</div>
-          <div class="message-time">13:19</div>
-        </div>
-        <!-- 내 메시지 -->
-        <div class="message-row me">
-          <div class="message-bubble">네~ 내일 오후에 만날까요?</div>
-          <div class="message-time">13:20</div>
-        </div>
-        <!-- ... 추가 메시지 -->
+      <!-- 채팅 -->
+      <div id="chat-div" style="display: none;">
+        <div id="chat-box"></div>
+        <form class="chat-input-bar" autocomplete="off" onsubmit="sendMessage(event)">
+          <input type="text" id="message-input" placeholder="메시지를 입력하세요..." autocomplete="off" />
+          <button type="submit" id="sendBtn" disabled>전송</button>
+          <button type="button" id="leaveBtn">나가기</button>
+        </form>
       </div>
-      <form class="chat-input-area" autocomplete="off" onsubmit="event.preventDefault();">
-        <input type="text" placeholder="메시지를 입력하세요..." />
-        <button type="submit"><i class="fa fa-paper-plane"></i></button>
-      </form>
-    </main>
+    </div>
   </div>
+ <script>
+  // ------------------ 파티클 배경 설정 ------------------
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 19, "density": { "enable": true, "value_area": 800 } },
+      "color": { "value": ["#c1b1e6", "#fff", "#fae6f2", "#f9eaff"] },
+      "shape": { "type": "circle" },
+      "opacity": {
+        "value": 0.19,
+        "random": true
+      },
+      "size": {
+        "value": 35,
+        "random": true
+      },
+      "line_linked": { "enable": false },
+      "move": {
+        "enable": true,
+        "speed": 0.28,
+        "direction": "top-right",
+        "random": true,
+        "straight": false,
+        "out_mode": "out",
+        "bounce": false
+      }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": { "onhover": { "enable": false }, "onclick": { "enable": false }, "resize": true }
+    },
+    "retina_detect": true
+  });
+
+  // ------------------ 채팅/매칭 로직 ------------------
+  let stompClient = null;
+  let roomId = null;
+  let myUserId = null;
+
+  // (1) 매칭 시작 버튼 클릭
+  document.getElementById("matchBtn").onclick = function() {
+    document.getElementById("match-div").style.display = "none";
+    document.getElementById("matching-div").style.display = "flex";
+    requestMatch();
+  };
+
+  // (2) 매칭 폴링 함수
+  function requestMatch() {
+    fetch("/match/random")
+      .then(res => res.json())
+      .then(data => {
+        myUserId = data.userId;
+        if (data.roomId) {
+          onMatched(data.roomId);
+        } else {
+          setTimeout(requestMatch, 900);
+        }
+      })
+      .catch(err => {
+        document.getElementById("matching-div").innerHTML =
+          "<div class='system-message' style='color:red;'>매칭 중 오류가 발생했습니다.</div>";
+        console.error("매칭 오류:", err);
+      });
+  }
+
+  // (3) 매칭 완료 시 호출
+  function onMatched(returnedRoomId) {
+    roomId = returnedRoomId;
+    document.getElementById("matching-div").style.display = "none";
+    document.getElementById("chat-div").style.display = "flex";
+    connectToChatRoom();
+    document.getElementById("message-input").focus();
+  }
+
+  // (4) STOMP(WebSocket) 연결 및 구독
+  function connectToChatRoom() {
+    const socket = new SockJS("/ws-chat");
+    stompClient = Stomp.over(socket);
+    stompClient.debug = null;
+    stompClient.connect({}, function(frame) {
+      stompClient.subscribe("/topic/chat/" + roomId, function(msg) {
+        appendChatMessage(JSON.parse(msg.body));
+      });
+      document.getElementById("sendBtn").disabled = false;
+    }, function(error) {
+      appendSystemMessage("채팅 서버 연결에 실패했습니다.");
+    });
+  }
+
+  // (5) 엔터키 혹은 전송 버튼 클릭 시 호출
+  function sendMessage(event) {
+    event.preventDefault();
+    sendChatMessage();
+  }
+
+  // (6) 실제 채팅 메시지를 서버로 전송
+  function sendChatMessage() {
+    const input = document.getElementById("message-input");
+    const content = input.value.trim();
+    if (!content || !stompClient) return;
+
+    // 클라이언트 로컬 시각을 HH:mm 형식으로 만들어서 timestamp1로 보낸다.
+    const now = new Date();
+    const hh = now.getHours().toString().padStart(2, "0");
+    const mm = now.getMinutes().toString().padStart(2, "0");
+    const timeStr = `${hh}:${mm}`;
+
+    // ChatsDTO 필드명(timestamp1)에 맞춰서 JSON을 만든다.
+    const chatMessage = {
+      senderId: myUserId,
+      text: content,
+      timestamp1: timeStr
+    };
+    stompClient.send("/app/chat/" + roomId, {}, JSON.stringify(chatMessage));
+    input.value = "";
+  }
+
+  // (7) 수신한 메시지를 화면에 그려준다.
+  function appendChatMessage(msg) {
+    const chatBox = document.getElementById("chat-box");
+    const row = document.createElement("div");
+
+    // 서버가 보낸 JSON 에서 msg.timestamp1 을 사용한다.
+    const time = msg.timestamp1 || "";
+    const isMe = (msg.senderId === myUserId);
+    row.className = "chat-row " + (isMe ? "me" : "you");
+
+    const sender = isMe ? "나" : "익명";
+    row.innerHTML = `
+      <div class="bubble">
+        <span class="sender">${sender}</span>
+        <span class="text">${msg.text}</span>
+        <span class="time">${time}</span>
+      </div>
+    `;
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // (8) 시스템 메시지(예: 연결 실패 등)를 화면에 표시
+  function appendSystemMessage(msg) {
+    const chatBox = document.getElementById("chat-box");
+    const div = document.createElement("div");
+    div.className = "system-message";
+    div.textContent = msg;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // (9) 전송/나가기 버튼 이벤트 바인딩
+  document.getElementById("sendBtn").onclick = sendChatMessage;
+  document.getElementById("message-input").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") sendChatMessage();
+  });
+  document.getElementById("leaveBtn").onclick = () => location.reload();
+</script>
+
+
 </body>
 </html>
