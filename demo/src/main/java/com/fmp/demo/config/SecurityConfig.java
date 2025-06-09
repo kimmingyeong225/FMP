@@ -16,6 +16,9 @@ public class SecurityConfig{
 
 	            // 2) 요청 권한 설정
 	            .authorizeHttpRequests(auth -> auth
+	            		
+	            		.requestMatchers("/mypage/**").permitAll()
+
 	                // WebSocket/STOMP 엔드포인트 허용
 	                .requestMatchers("/ws-chat/**", "/app/**", "/topic/**").permitAll()
 	                // 매칭 API 및 정적 리소스 허용
