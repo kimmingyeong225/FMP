@@ -42,7 +42,7 @@ public class SignUpController {
         } else if (genderInput.equals("여자")) {
             user.setGender("F");
         } else {
-            user.setGender("N");
+            user.setGender("M");
         }
         user.setDepartment(dto.getDepartment());
         user.setMajor(dto.getMajor());
