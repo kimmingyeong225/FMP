@@ -429,8 +429,19 @@
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
     stompClient.connect({}, function(frame) {
+      // 구독 콜백: LEAVE 감지
       stompClient.subscribe("/topic/chat/" + roomId, function(msg) {
-        appendChatMessage(JSON.parse(msg.body));
+        const data = JSON.parse(msg.body);
+
+        // 상대방 퇴장 메시지 처리
+        if (data.text === "LEAVE" && data.senderId !== myUserId) {
+          appendSystemMessage("상대방이 나갔습니다.");
+          document.getElementById("sendBtn").disabled = true;
+          return;
+        }
+
+        // 일반 채팅 메시지
+        appendChatMessage(data);
       });
       document.getElementById("sendBtn").disabled = false;
     }, function(error) {
@@ -498,12 +509,36 @@
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // (9) 전송/나가기 버튼 이벤트 바인딩
+//(9) 전송/나가기 버튼 이벤트 바인딩
   document.getElementById("sendBtn").onclick = sendChatMessage;
   document.getElementById("message-input").addEventListener("keydown", function(e) {
     if (e.key === "Enter") sendChatMessage();
   });
-  document.getElementById("leaveBtn").onclick = () => location.reload();
+
+  // 나가기 버튼 클릭 시 LEAVE 메시지 전송 후 새로고침
+  document.getElementById("leaveBtn").onclick = function() {
+    if (stompClient && stompClient.connected) {
+      stompClient.send(
+        "/app/chat/" + roomId + "/leave",
+        {},
+        JSON.stringify({ senderId: myUserId })
+      );
+      stompClient.disconnect();
+    }
+    location.reload();
+  };
+
+  // 페이지 닫기/새로고침 시에도 LEAVE 전송
+  window.addEventListener("beforeunload", function() {
+    if (stompClient && stompClient.connected) {
+      stompClient.send(
+        "/app/chat/" + roomId + "/leave",
+        {},
+        JSON.stringify({ senderId: myUserId })
+      );
+      stompClient.disconnect();
+    }
+  });
 </script>
 
 
