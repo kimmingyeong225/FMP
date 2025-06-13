@@ -36,8 +36,9 @@
 
   <!-- 3. 회원 탈퇴 -->
 <delete id="withdrawUser" parameterType="String">
-  DELETE FROM users
-  WHERE student_id = #{studentId}
+   UPDATE users
+     SET is_deleted = TRUE
+   WHERE student_id = #{studentId}
 </delete>
 
 
