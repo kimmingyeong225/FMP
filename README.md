@@ -12,8 +12,7 @@
 2. [주요 기능 (Features)](#-주요-기능-features)
 3. [기술 스택 (Tech Stack)](#-기술-스택-tech-stack)
 4. [설치 및 실행 (Getting Started)](#-설치-및-실행-getting-started)
-5. [데모 (Demo)](#-데모-demo)
-6. [팀원 (Contributors)](#-팀원-contributors)
+
 
 ---
 
