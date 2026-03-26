@@ -1,6 +1,7 @@
 # 🤝 FMP — Friend Matching Program
 
 > 취미와 관심사를 기반으로 새로운 친구를 만나보세요!
+> 
 > Find new friends based on your hobbies and interests!
 
 ---
@@ -28,11 +29,11 @@
 
 | 기능 | 설명 | Feature | Description |
 |------|------|---------|-------------|
-| 👤 회원가입 / 로그인 | 이메일 기반 인증 | Sign Up / Login | Email-based authentication |
-| 📝 프로필 설정 | 관심사, 취미, 자기소개 등록 | Profile Setup | Register interests & bio |
-| 🔍 친구 매칭 | 공통 관심사 기반 사용자 추천 | Friend Matching | Recommend users by shared interests |
-| 💬 매칭 요청 | 원하는 사용자에게 친구 신청 | Match Request | Send a friend request |
-| ✅ 수락 / 거절 | 받은 친구 신청 관리 | Accept / Decline | Manage received requests |
+|👤 회원가입 / 로그인	사용자 인증 및 계정 생성 | Sign Up / Login | User authentication and account creation | 
+|👤 마이페이지 | 사용자 정보 조회 및 수정 | My Page | View and update user profile |
+|🔍 친구 매칭 | 사용자 성향 기반 친구 추천 | Friend Matching | Recommend friends based on user similarity |
+|💬 실시간 채팅 | 매칭된 친구와 1:1 채팅 | Real-time Chat |	1:1 chat with matched users |
+
 
 ---
 
