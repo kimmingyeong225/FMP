@@ -28,7 +28,7 @@
 
 | 기능 | 설명 | Feature | Description |
 |------|------|---------|-------------|
-|👤 회원가입 / 로그인	사용자 인증 및 계정 생성 | Sign Up / Login | User authentication and account creation | 
+|👤 회원가입 / 로그인 | 사용자 인증 및 계정 생성 | Sign Up / Login | User authentication and account creation | 
 |👤 마이페이지 | 사용자 정보 조회 및 수정 | My Page | View and update user profile |
 |🔍 친구 매칭 | 사용자 성향 기반 친구 추천 | Friend Matching | Recommend friends based on user similarity |
 |💬 실시간 채팅 | 매칭된 친구와 1:1 채팅 | Real-time Chat |	1:1 chat with matched users |
